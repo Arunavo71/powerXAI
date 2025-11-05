@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "powerxai"
+version = "0.0.1"
+description = "Power indices for explainable AI"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Filip Naudot" },
+    { name = "Arunavo Ganguly" },
+]
+keywords = ["explainable ai", "xai", "game theory", "power indices", "shapley"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/filipnaudot/powerXAI"
+Issues = "https://github.com/filipnaudot/powerXAI/issues"
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pytest-cov",
+]
+
+docs = [
+  "sphinx",
+  "sphinx-book-theme",
+  "sphinx-design",
+]
+
+###
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+###
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["powerxai*"]
+
+###
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+###
+[tool.ruff]
+target-version = "py39"
