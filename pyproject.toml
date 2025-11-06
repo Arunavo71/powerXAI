@@ -37,7 +37,6 @@ Issues = "https://github.com/filipnaudot/powerXAI/issues"
 [project.optional-dependencies]
 dev = [
   "pytest",
-  "pytest-cov",
 ]
 
 docs = [
