@@ -15,9 +15,9 @@ def shapley_value(player_index: int,
     across all possible coalitions.
 
     Args:
-        player (int): The index of the player whose Shapley value is computed.
-        num_players (int): The total number of players in the game.
-        value_function (Callable[[Set[int]], float]): 
+        player_index (int): The index of the player whose Shapley value is computed.
+        players (list[Any]): List of players.
+        value_function (Callable[[list[Any], Set[int]], float]): 
             A function that returns the value of any coalition (based on the player indices).
 
     Returns:

@@ -8,6 +8,7 @@ def test_single_non_null_player():
         Value function.
 
         Args:
+            players (List[Any]): List of players or elements in the reference set.
             coalition (Set[int]): Indices of players whose coalition value is computed.
 
         Returns:
