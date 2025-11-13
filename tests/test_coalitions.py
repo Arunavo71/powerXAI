@@ -9,7 +9,7 @@ def test_empty_set():
 def test_single_element():
     result = coalitions({1})
     expected = [set(), {1}]
-    assert result == expected, "Single-element set should yield empty and single-element sets"
+    assert result == expected
 
 
 def test_two_elements():
