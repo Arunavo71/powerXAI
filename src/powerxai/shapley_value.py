@@ -1,12 +1,12 @@
 from math import factorial
-from powerxai.types import Callable, Set, Any
+from powerxai.types import Callable, Any
 from powerxai.coalitions import coalitions
 
 
 
 def shapley_value(player_index: int,
                   players: list[Any],
-                  value_function: Callable[[list[Any], Set[int]], float]
+                  value_function: Callable[[list[Any], set[int]], float]
                   ) -> float:
     """
     Compute the Shapley value for a given player in a cooperative game.
@@ -16,8 +16,8 @@ def shapley_value(player_index: int,
 
     Args:
         player_index (int): The index of the player whose Shapley value is computed.
-        players (list[Any]): List of players.
-        value_function (Callable[[list[Any], Set[int]], float]): 
+        players (list[Any]): list of players.
+        value_function (Callable[[list[Any], set[int]], float]): 
             A function that returns the value of any coalition (based on the player indices).
 
     Returns:
