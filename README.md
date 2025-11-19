@@ -30,7 +30,7 @@ def weighted_ABC_value(players, coalition) -> float:
 players = ["A", "B", "C", "D"]
 result = shapley_value(player_index=0, players=players, value_function=weighted_ABC_value)
 
-print(f"The Shapley value for player 'B' is: {result}")
+print(f"The Shapley value for player 'A' is: {result}")
 ```
 
 ---
