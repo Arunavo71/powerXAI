@@ -113,8 +113,8 @@ def owen_three_person_game_example(players, coalition)  -> float:
     Returns:
         float
     """
-    coalition_labels = set()
-    for index in coalition: coalition_labels.add(players[index])
+    flattened_players = [player for group in players for player in group]
+    coalition_labels = {flattened_players[i] for i in coalition}
 
     if   coalition_labels       == set():            return 0.0
     elif len(coalition_labels)  == 1:                return 0.0
@@ -136,8 +136,8 @@ def owen_four_person_game_example(players, coalition)  -> float:
     Returns:
         float
     """
-    coalition_labels = set()
-    for index in coalition: coalition_labels.add(players[index])
+    flattened_players = [player for group in players for player in group]
+    coalition_labels = {flattened_players[i] for i in coalition}
 
     if   coalition_labels       == set():            return 0.0
     elif len(coalition_labels)  == 1:                return 0.0

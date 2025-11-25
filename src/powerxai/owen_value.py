@@ -29,30 +29,23 @@ def owen_value(player_index: int,
     Returns:
         float: The Owen value of the specified player.
     """
-    flattened_players: list[Any] = []
     partition_indices: list[set[int]] = []
     current_index = 0
     for group in players:
         group_size = len(group)
         partition_indices.append(set(range(current_index, current_index + group_size)))
-        flattened_players.extend(group)
         current_index += group_size
 
-    num_players = len(flattened_players)
+    num_players = current_index
     assert 0 <= player_index < num_players, (f"player_index out of range. Must be in [0, {num_players - 1}]")
 
-    group_index_of_player = None
-    for group_index, group in enumerate(partition_indices):
-        if player_index in group:
-            group_index_of_player = group_index
-            break
-    assert group_index_of_player is not None, (f"player_index {player_index} not found in the partition.")
+    group_index_of_player = next(index for index, group in enumerate(partition_indices) if player_index in group)
 
     num_groups = len(partition_indices)
     player_group = partition_indices[group_index_of_player]
     other_groups_indices = set(range(num_groups)) - {group_index_of_player}
     group_without_player = set(player_group) - {player_index}
-
+    group_size = len(player_group)
 
     total_value = 0.0
     for indices_outer_coalition in coalitions(other_groups_indices):
@@ -65,15 +58,14 @@ def owen_value(player_index: int,
 
         for inner_coalition in coalitions(group_without_player):
             size_inner_coalition = len(inner_coalition)
-            group_size = len(player_group)
             weight_inner_coalition = (factorial(size_inner_coalition) *
                                       factorial(group_size - size_inner_coalition - 1)) / factorial(group_size)
 
             weight = weight_outer_coalition * weight_inner_coalition
             base_coalition = external_players | inner_coalition
             marginal_contribution = (
-                value_function(flattened_players, base_coalition | {player_index}) -
-                value_function(flattened_players, base_coalition)
+                value_function(players, base_coalition | {player_index}) -
+                value_function(players, base_coalition)
             )
 
             total_value += weight * marginal_contribution
