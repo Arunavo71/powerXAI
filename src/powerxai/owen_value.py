@@ -49,12 +49,11 @@ def owen_value(player_index: int,
 
     total_value = 0.0
     for indices_outer_coalition in coalitions(other_groups_indices):
-        external_players = set()
-        for idx in indices_outer_coalition: external_players |= partition_indices[idx]
-
         size_outer_coalition = len(indices_outer_coalition)
         weight_outer_coalition = (factorial(size_outer_coalition) *
                                   factorial(num_groups - size_outer_coalition - 1)) / factorial(num_groups)
+
+        external_players = {player for idx in indices_outer_coalition for player in partition_indices[idx]}
 
         for inner_coalition in coalitions(group_without_player):
             size_inner_coalition = len(inner_coalition)
