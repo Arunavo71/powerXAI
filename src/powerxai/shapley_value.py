@@ -1,5 +1,5 @@
 from math import factorial
-from powerxai.types import Callable, Iterable, Any
+from powerxai.types import Callable, Any
 from powerxai.coalitions import coalitions
 
 
