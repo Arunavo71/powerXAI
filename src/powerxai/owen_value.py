@@ -28,8 +28,8 @@ def owen_value(player_index: int,
     Returns:
         float: The Owen value of the specified player.
     """
-    partition_as_indices, num_players = _get_partition_as_indices(players)
-    assert 0 <= player_index < num_players, (f"player_index out of range. Must be in [0, {num_players - 1}]")
+    partition_as_indices, num_atomic_players = _get_partition_as_indices(players)
+    assert 0 <= player_index < num_atomic_players, (f"player_index out of range. Must be in [0, {num_atomic_players - 1}]")
 
     group_index_of_player = next(index for index, group in enumerate(partition_as_indices) if player_index in group)
 
@@ -65,7 +65,7 @@ def _get_partition_as_indices(players: list[Any]) -> tuple[list[set[int]], int]:
         players (list[Any]): A list of groups, where each group is a collection of atomic players.
 
     Returns:
-        tuple[list[set[int]], int]: A pair (partition as indices, number of players).
+        tuple[list[set[int]], int]: A pair (partition as indices, number of atomic players).
     """
     partition_as_indices: list[set[int]] = []
     current_index: int = 0
