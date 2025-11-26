@@ -1,8 +1,27 @@
 from powerxai.owen_value import owen_value
+from powerxai.shapley_value import shapley_value
 from .value_functions import (
     owen_three_person_game_example,
     owen_four_person_game_example,
 )
+
+
+def test_three_person_game_example_1_partition_1_same_as_shapley():
+    """
+    For the special case of having all groups be singletons
+    the Owen value reduces to the Shapley value exactly.
+    """
+    players = [["A"], ["B"], ["C"]]
+    num_players = sum(len(group) for group in players)
+    owen_result = [
+        owen_value(player_index=i, players=players, value_function=owen_three_person_game_example)
+        for i in range(num_players)
+    ]
+    shapley_result = [
+        shapley_value(player_index=i, players=players, value_function=owen_three_person_game_example)
+        for i in range(num_players)
+    ]
+    assert owen_result == shapley_result
 
 
 def test_three_person_game_example_1_partition_1():
