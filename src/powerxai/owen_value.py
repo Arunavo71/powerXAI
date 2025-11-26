@@ -1,7 +1,6 @@
 from math import factorial
+from powerxai.shapley_value import shapley_weighted_coalitions
 from powerxai.types import Callable, Any
-from powerxai.coalitions import coalitions
-
 
 def owen_value(player_index: int,
                players: list[Any],
@@ -29,44 +28,47 @@ def owen_value(player_index: int,
     Returns:
         float: The Owen value of the specified player.
     """
-    partition_indices: list[set[int]] = []
-    current_index = 0
-    for group in players:
-        group_size = len(group)
-        partition_indices.append(set(range(current_index, current_index + group_size)))
-        current_index += group_size
-
-    num_players = current_index
+    partition_as_indices, num_players = _get_partition_as_indices(players)
     assert 0 <= player_index < num_players, (f"player_index out of range. Must be in [0, {num_players - 1}]")
 
-    group_index_of_player = next(index for index, group in enumerate(partition_indices) if player_index in group)
+    group_index_of_player = next(index for index, group in enumerate(partition_as_indices) if player_index in group)
 
-    num_groups = len(partition_indices)
-    player_group = partition_indices[group_index_of_player]
-    other_groups_indices = set(range(num_groups)) - {group_index_of_player}
-    group_without_player = set(player_group) - {player_index}
-    group_size = len(player_group)
+    num_groups = len(partition_as_indices)
+    player_group = set(partition_as_indices[group_index_of_player])
+    group_indices = set(range(num_groups))
 
     total_value = 0.0
-    for indices_outer_coalition in coalitions(other_groups_indices):
-        size_outer_coalition = len(indices_outer_coalition)
-        weight_outer_coalition = (factorial(size_outer_coalition) *
-                                  factorial(num_groups - size_outer_coalition - 1)) / factorial(num_groups)
+    for indices_outer_coalition, weight_outer_coalition in shapley_weighted_coalitions(group_index_of_player, group_indices):
+        external_players = {player for idx in indices_outer_coalition for player in partition_as_indices[idx]}
 
-        external_players = {player for idx in indices_outer_coalition for player in partition_indices[idx]}
-
-        for inner_coalition in coalitions(group_without_player):
-            size_inner_coalition = len(inner_coalition)
-            weight_inner_coalition = (factorial(size_inner_coalition) *
-                                      factorial(group_size - size_inner_coalition - 1)) / factorial(group_size)
-
+        for inner_coalition, weight_inner_coalition in shapley_weighted_coalitions(player_index, player_group):
             weight = weight_outer_coalition * weight_inner_coalition
             base_coalition = external_players | inner_coalition
             marginal_contribution = (
                 value_function(players, base_coalition | {player_index}) -
                 value_function(players, base_coalition)
             )
-
             total_value += weight * marginal_contribution
 
     return total_value
+
+
+def _get_partition_as_indices(players: list[Any]) -> tuple[list[set[int]], int]:
+    """
+    Convert a partitioned list of player groups into index-based groups.
+
+    Interprets `players` as a list of groups, where each group is an iterable
+    of atomic players, and assigns consecutive integer indices to every
+    atomic player in the order they appear.
+
+    Args:
+        players (list[Any]): A list of groups, where each group is a collection of atomic players.
+
+    Returns:
+        tuple[list[set[int]], int]: A pair (partition as indices, number of players).
+    """
+    partition_as_indices: list[set[int]] = []
+    current_index: int = 0
+    for group in players:
+        partition_as_indices.append(set(range(current_index, current_index := current_index + len(group))))
+    return partition_as_indices, current_index
