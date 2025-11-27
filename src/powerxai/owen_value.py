@@ -31,19 +31,20 @@ def owen_value(player_index: int,
     partition_as_indices, num_atomic_players = _get_partition_as_indices(players)
     assert 0 <= player_index < num_atomic_players, (f"player_index out of range. Must be in [0, {num_atomic_players - 1}]")
 
-    group_index_of_player = next(index for index, group in enumerate(partition_as_indices) if player_index in group)
-
+    group_index_of_player = next(group_index for group_index, group in enumerate(partition_as_indices) if player_index in group)
     num_groups = len(partition_as_indices)
     player_group = set(partition_as_indices[group_index_of_player])
     group_indices = set(range(num_groups))
 
     total_value = 0.0
+    # Form coalitions of groups, excluding the group containing the player of interest.
     for indices_outer_coalition, weight_outer_coalition in shapley_weighted_coalitions(group_index_of_player, group_indices):
-        external_players = {player for idx in indices_outer_coalition for player in partition_as_indices[idx]}
+        players_of_outer_coalition = {player for idx in indices_outer_coalition for player in partition_as_indices[idx]}
 
+        # Form coalitions of players within the group containing the player of interest, excluding the player of interest.
         for inner_coalition, weight_inner_coalition in shapley_weighted_coalitions(player_index, player_group):
             weight = weight_outer_coalition * weight_inner_coalition
-            base_coalition = external_players | inner_coalition
+            base_coalition = players_of_outer_coalition | inner_coalition
             marginal_contribution = (
                 value_function(players, base_coalition | {player_index}) -
                 value_function(players, base_coalition)
