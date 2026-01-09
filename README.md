@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/_static/logo-powerxai.png" alt="powerXAI logo" width="140">
+  <img src="docs/_static/logo-powerxai.png" alt="powerXAI logo" width="180">
 </div>
 <div align="center">
   Power Indices for Explainable AI
